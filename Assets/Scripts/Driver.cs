@@ -2,20 +2,25 @@ using UnityEngine;
 
 public class Driver : MonoBehaviour
 {
-  public float moveSpeed;
-  public float steerSpeed;
+  public float moveSpeed = 10f;
+  public float steerSpeed = 100f;
+
+  float steerDirection = 0f;
+  float moveDirection = 0f;
+
+  new Rigidbody2D rigidbody;
 
   private void Awake() {
-    moveSpeed = 0.01f;
-    steerSpeed = 1f;
+    rigidbody = GetComponent<Rigidbody2D>();
   }
 
   private void Update() {
-    transform.Rotate(0, 0, steerSpeed);
-    transform.Translate(0, moveSpeed, 0);
+    steerDirection = Input.GetAxis("Horizontal");
+    moveDirection = Input.GetAxis("Vertical");
   }
 
   private void FixedUpdate() {
-    
+    transform.Rotate(0, 0, -steerDirection * steerSpeed * Time.deltaTime);
+    transform.Translate(0, moveDirection * moveSpeed * Time.deltaTime, 0);
   }
 }
