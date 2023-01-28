@@ -4,13 +4,29 @@ using UnityEngine;
 
 public class CollisionMechanics : MonoBehaviour
 {
-  private void OnCollisionEnter2D(Collision2D collision) {
+  public float destroyDelay = 0.5f;
+  public Color32 hasPackageColor = new Color32(1,1,1,1);
+  public Color32 noPackageColor = new Color32(1,1,1,1);
+
+  bool hasPackage = false;
+  SpriteRenderer spriteRenderer;
+  private void Awake() {
+    spriteRenderer = GetComponent<SpriteRenderer>();
+  }
+  private void OnCollisionEnter2D(Collision2D other) {
     Debug.Log("collision");
   }
 
-  private void OnTriggerEnter2D(Collider2D collision) {
-
-    // if trigger is package then pick it up
-    Debug.Log("trigger");
+  private void OnTriggerEnter2D(Collider2D other) {
+    if(hasPackage == false && other.CompareTag("package")) {
+      hasPackage = true;
+      spriteRenderer.color = hasPackageColor;
+      Destroy(other.gameObject, destroyDelay);
+    } 
+    
+    if(hasPackage == true && other.CompareTag("customer")) {
+      hasPackage = false;
+      spriteRenderer.color = noPackageColor;
+    }
   }
 }
